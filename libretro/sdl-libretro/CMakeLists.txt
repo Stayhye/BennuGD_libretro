@@ -3,7 +3,7 @@ project(sdl-libretro C)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON CACHE BOOL "compile as PIC by default")
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
-if(CMAKE_SYSTEM_NAME STREQUAL "PS2")
+if(CMAKE_SYSTEM_NAME STREQUAL "PS2" OR CMAKE_SYSTEM_NAME STREQUAL "Generic")
     if(NOT TARGET Threads::Threads)
         add_library(Threads::Threads INTERFACE IMPORTED)
     endif()
