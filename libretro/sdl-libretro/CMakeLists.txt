@@ -2,7 +2,14 @@ cmake_minimum_required(VERSION 3.14)
 project(sdl-libretro C)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON CACHE BOOL "compile as PIC by default")
 set(THREADS_PREFER_PTHREAD_FLAG ON)
-find_package(Threads REQUIRED)
+
+if(CMAKE_SYSTEM_NAME STREQUAL "PS2")
+    if(NOT TARGET Threads::Threads)
+        add_library(Threads::Threads INTERFACE IMPORTED)
+    endif()
+else()
+    find_package(Threads REQUIRED)
+endif()
 
 set (SDL-src
     src/SDL.c
