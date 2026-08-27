@@ -12,6 +12,14 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 set(CMAKE_BUILD_RPATH "${CMAKE_BINARY_DIR}/lib")
 
+# Force-feed type sizes for cross-compiling libogg/modules on MIPS/PS2
+set(SIZE16 2 CACHE STRING "" FORCE)
+set(USIZE16 2 CACHE STRING "" FORCE)
+set(SIZE32 4 CACHE STRING "" FORCE)
+set(USIZE32 4 CACHE STRING "" FORCE)
+set(SIZE64 8 CACHE STRING "" FORCE)
+set(USIZE64 8 CACHE STRING "" FORCE)
+
 if (NOT BUILD_SHARED_LIBS)
     add_compile_definitions(__STATIC__=1)
 endif()
