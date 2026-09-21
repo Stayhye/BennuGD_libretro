@@ -194,6 +194,12 @@ endif()
 if (NO_SYSTEM_DEPENDENCIES OR NOT ZLIB_FOUND)
     set(ZLIB_ENABLE_TESTS OFF CACHE BOOL "Build test binaries" FORCE)
     set(ZLIB_COMPAT ON CACHE BOOL "Compile with zlib compatible API" FORCE)
+    set(WITH_NATIVE_INSTRUCTIONS OFF CACHE BOOL "Disable native instructions" FORCE)
+    set(WITH_AVX2 OFF CACHE BOOL "" FORCE)
+    set(WITH_SSE2 OFF CACHE BOOL "" FORCE)
+    set(WITH_SSSE3 OFF CACHE BOOL "" FORCE)
+    set(WITH_ACLE OFF CACHE BOOL "" FORCE)
+    set(WITH_NEON OFF CACHE BOOL "" FORCE)
     set(SKIP_INSTALL_ALL TRUE)
     FetchContent_Declare(zlib
         GIT_REPOSITORY https://github.com/zlib-ng/zlib-ng.git
