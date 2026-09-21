@@ -67,7 +67,7 @@ set_target_properties(bennugd_libretro PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMA
 set_target_properties(bennugd_libretro PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set_target_properties(bennugd_libretro PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR})
 
-target_link_libraries(bennugd_libretro bgdi)
+target_link_libraries(bennugd_libretro PRIVATE bgdi)
 
 # Link comprehensive ps2sdk libraries if targeting PlayStation 2
 if (CMAKE_SYSTEM_NAME MATCHES "PS2" OR (CMAKE_SYSTEM_NAME MATCHES "Generic" AND CMAKE_SYSTEM_PROCESSOR MATCHES "mips"))
