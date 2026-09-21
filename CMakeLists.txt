@@ -5,6 +5,7 @@ set (CMAKE_C_STANDARD 11)
 option(NO_SYSTEM_DEPENDENCIES "Don't search dependencies but build them locally" ON)
 option(libretro_core "build libretro_core instead of standalone version" ON)
 option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
+option(USE_WOLFSSL "Use wolfSSL instead of LibreSSL for crypto backend" ON) # Force wolfSSL for PS2
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
