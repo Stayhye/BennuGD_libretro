@@ -21,6 +21,25 @@ if (CMAKE_SYSTEM_NAME MATCHES "PS2" OR (CMAKE_SYSTEM_NAME MATCHES "Generic" AND 
         include_directories("$ENV{PS2SDK}/ee/include" "$ENV{PS2SDK}/common/include")
         link_directories("$ENV{PS2SDK}/ee/lib")
     endif()
+
+    # Create a dummy syslog.h compatibility header for LibreSSL / dependencies on PS2
+    file(WRITE "${CMAKE_BINARY_DIR}/syslog.h"
+"#ifndef PS2_SYSLOG_STUB_H
+#define PS2_SYSLOG_STUB_H
+#define LOG_EMERG   0
+#define LOG_ALERT   1
+#define LOG_CRIT    2
+#define LOG_ERR     3
+#define LOG_WARNING 4
+#define LOG_NOTICE  5
+#define LOG_INFO    6
+#define LOG_DEBUG   7
+static inline void openlog(const char *ident, int option, int facility) {}
+static inline void syslog(int priority, const char *format, ...) {}
+static inline void closelog(void) {}
+#endif
+")
+    include_directories(BEFORE "${CMAKE_BINARY_DIR}")
 endif()
 
 # Force-feed type sizes for cross-compiling libogg/modules on MIPS/PS2
