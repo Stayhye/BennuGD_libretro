@@ -11,7 +11,7 @@ if (${TARGET_SUPPORTS_SHARED_LIBS_PROPERTY})
 else()
     set( CORE_LIBRARY_TYPE STATIC)
 endif()
- 
+
 
 add_library(bennugd_libretro ${CORE_LIBRARY_TYPE}
     ${libretro-common_SOURCE_DIR}/libco/libco.c
@@ -47,6 +47,9 @@ if (CMAKE_SYSTEM_NAME MATCHES "NintendoSwitch")
     target_compile_definitions(bennugd_libretro PRIVATE SWITCH=1 )
 endif()
 
+if (CMAKE_SYSTEM_NAME MATCHES "PS2" OR (CMAKE_SYSTEM_NAME MATCHES "Generic" AND CMAKE_SYSTEM_PROCESSOR MATCHES "mips"))
+    target_compile_definitions(bennugd_libretro PRIVATE PS2=1 PSP=0)
+endif()
 
 target_include_directories(bennugd_libretro PRIVATE "${libretro-common_SOURCE_DIR}/include")
 
@@ -65,6 +68,18 @@ set_target_properties(bennugd_libretro PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMA
 set_target_properties(bennugd_libretro PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR})
 
 target_link_libraries(bennugd_libretro bgdi)
+
+# Link comprehensive ps2sdk libraries if targeting PlayStation 2
+if (CMAKE_SYSTEM_NAME MATCHES "PS2" OR (CMAKE_SYSTEM_NAME MATCHES "Generic" AND CMAKE_SYSTEM_PROCESSOR MATCHES "mips"))
+    target_link_libraries(bennugd_libretro PRIVATE
+        cdvd
+        pad
+        mc
+        sifrpc
+        sifc
+        kernel
+    )
+endif()
 
 if (CMAKE_SYSTEM_NAME MATCHES "NintendoSwitch")
 

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14...3.24)
+cmake_minimum_required(VERSION 3.14...3.31)
 project(bennugd_libretro C)
 set (CMAKE_C_STANDARD 11)
 
@@ -11,6 +11,17 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 set(CMAKE_BUILD_RPATH "${CMAKE_BINARY_DIR}/lib")
+
+# PlayStation 2 / MIPS cross-compilation detection and global definitions
+if (CMAKE_SYSTEM_NAME MATCHES "PS2" OR (CMAKE_SYSTEM_NAME MATCHES "Generic" AND CMAKE_SYSTEM_PROCESSOR MATCHES "mips"))
+    add_compile_definitions(PS2=1 PSP=0)
+    
+    # Expose ps2sdk paths if environment variables are set
+    if(DEFINED ENV{PS2SDK})
+        include_directories("$ENV{PS2SDK}/ee/include" "$ENV{PS2SDK}/common/include")
+        link_directories("$ENV{PS2SDK}/ee/lib")
+    endif()
+endif()
 
 # Force-feed type sizes for cross-compiling libogg/modules on MIPS/PS2
 set(SIZE16 2 CACHE STRING "" FORCE)
