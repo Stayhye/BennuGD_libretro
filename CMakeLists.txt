@@ -22,10 +22,11 @@ if (CMAKE_SYSTEM_NAME MATCHES "PS2" OR (CMAKE_SYSTEM_NAME MATCHES "Generic" AND 
         link_directories("$ENV{PS2SDK}/ee/lib")
     endif()
 
-    # Create a dummy syslog.h compatibility header for LibreSSL / dependencies on PS2
+    # Create a comprehensive dummy syslog.h compatibility header for LibreSSL on PS2
     file(WRITE "${CMAKE_BINARY_DIR}/syslog.h"
 "#ifndef PS2_SYSLOG_STUB_H
 #define PS2_SYSLOG_STUB_H
+
 #define LOG_EMERG   0
 #define LOG_ALERT   1
 #define LOG_CRIT    2
@@ -34,9 +35,21 @@ if (CMAKE_SYSTEM_NAME MATCHES "PS2" OR (CMAKE_SYSTEM_NAME MATCHES "Generic" AND 
 #define LOG_NOTICE  5
 #define LOG_INFO    6
 #define LOG_DEBUG   7
+
+#define LOG_CONS    0x02
+#define LOG_LOCAL2  (18<<3)
+
+struct syslog_data {
+    int dummy;
+};
+#define SYSLOG_DATA_INIT { 0 }
+
 static inline void openlog(const char *ident, int option, int facility) {}
 static inline void syslog(int priority, const char *format, ...) {}
+static inline void vsyslog(int priority, const char *format, __builtin_va_list ap) {}
+static inline void vsyslog_r(int priority, struct syslog_data *data, const char *format, __builtin_va_list ap) {}
 static inline void closelog(void) {}
+
 #endif
 ")
     include_directories(BEFORE "${CMAKE_BINARY_DIR}")
