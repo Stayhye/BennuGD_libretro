@@ -208,11 +208,9 @@ if (NO_SYSTEM_DEPENDENCIES OR NOT ZLIB_FOUND)
         target_compile_definitions(zlib PRIVATE z_crc_t=unsigned int)
     endif()
 
-    if(EXISTS "${zlib_SOURCE_DIR}/zbuild.h")
-        file(READ "${zlib_SOURCE_DIR}/zbuild.h" ZBUILD_CONTENT)
-        if(NOT ZBUILD_CONTENT MATCHES "#include <stddef.h>")
-            file(WRITE "${zlib_SOURCE_DIR}/zbuild.h" "#include <stddef.h>\n${ZBUILD_CONTENT}")
-        endif()
+    # Force the compiler to automatically include stddef.h before compiling any zlib source file
+    if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
+        target_compile_options(zlib PRIVATE "-include" "stddef.h")
     endif()
 
     add_library(zlib_interface INTERFACE)
