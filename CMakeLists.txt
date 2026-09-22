@@ -208,9 +208,12 @@ if (NO_SYSTEM_DEPENDENCIES OR NOT ZLIB_FOUND)
         target_compile_definitions(zlib PRIVATE z_crc_t=unsigned int)
     endif()
 
-    # Force the compiler to automatically include stddef.h before compiling any zlib source file
-    if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
-        target_compile_options(zlib PRIVATE "-include" "stddef.h")
+    # Directly patch adler32_p.h to ensure stddef.h is always included for size_t
+    if(EXISTS "${zlib_SOURCE_DIR}/adler32_p.h")
+        file(READ "${zlib_SOURCE_DIR}/adler32_p.h" ADLER32_P_CONTENT)
+        if(NOT ADLER32_P_CONTENT MATCHES "#include <stddef.h>")
+            file(WRITE "${zlib_SOURCE_DIR}/adler32_p.h" "#include <stddef.h>\n${ADLER32_P_CONTENT}")
+        endif()
     endif()
 
     add_library(zlib_interface INTERFACE)
