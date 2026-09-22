@@ -78,11 +78,6 @@ endif()
 
 function(disable_all_warnings target)
     if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.20.0")
-        # Simply adding "/w" causes D9025 because /w overrides any /W1, /W2, /W3 or /W4 the target might have defined.
-        # Some targets add those in CMAKE_C_FLAGS which makes it hard to override.
-        # Adding the disabled warnings to COMPILE_OPTIONS applies them also to assembler files 
-        # where they are not supported causing new warnings. 
-        # So this disables warnings individually :-/
         if (CMAKE_C_COMPILER_ID MATCHES "Clang")
             set(disabled_warnings "")
         elseif (CMAKE_C_COMPILER_ID MATCHES "GNU")
@@ -123,7 +118,6 @@ endif()
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON CACHE BOOL "compile as PIC by default")
-
 
 include(FetchContent)
 
@@ -212,6 +206,7 @@ if (NO_SYSTEM_DEPENDENCIES OR NOT ZLIB_FOUND)
     target_compile_definitions(zlib PRIVATE ZLIB_COMPAT=1)
     if(CMAKE_SYSTEM_NAME MATCHES "PS2" OR CMAKE_SYSTEM_PROCESSOR MATCHES "mips")
         target_compile_definitions(zlib PRIVATE z_crc_t=unsigned int)
+        target_compile_options(zlib PRIVATE "-include" "stddef.h")
     endif()
 
     add_library(zlib_interface INTERFACE)
