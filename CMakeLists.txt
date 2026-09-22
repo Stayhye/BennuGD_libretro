@@ -209,6 +209,11 @@ if (NO_SYSTEM_DEPENDENCIES OR NOT ZLIB_FOUND)
     )
     FetchContent_MakeAvailable(zlib)
 
+    target_compile_definitions(zlib PRIVATE ZLIB_COMPAT=1)
+    if(CMAKE_SYSTEM_NAME MATCHES "PS2" OR CMAKE_SYSTEM_PROCESSOR MATCHES "mips")
+        target_compile_definitions(zlib PRIVATE z_crc_t=unsigned int)
+    endif()
+
     add_library(zlib_interface INTERFACE)
     target_link_libraries(zlib_interface INTERFACE zlib)
     target_include_directories(zlib_interface INTERFACE ${zlib_BINARY_DIR})
